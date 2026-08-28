@@ -30,3 +30,29 @@ jobs:
       - name: Rodar Testes de Sanidade (Pytest)
         run: |
           pytest tests/
+          
+  deploy_aws:
+    needs: test_and_validate # SÓ RODA SE OS TESTES FICAREM VERDES!
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' # Só faz deploy se estiver na branch principal
+
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v4
+
+      - name: Configurar Python 3.12
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.12'
+
+      - name: Instalar dependências da AWS
+        run: pip install boto3 sagemaker scikit-learn==1.4.2 joblib
+
+      - name: Executar Deploy no SageMaker
+        env:
+          # O robô puxa as senhas do cofre que você acabou de criar!
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: "us-east-1"
+        run: |
+          python src/deploy_sagemaker.py
