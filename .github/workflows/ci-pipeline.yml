@@ -46,7 +46,7 @@ jobs:
           python-version: '3.12'
 
       - name: Instalar dependências da AWS
-        run: pip install boto3 sagemaker scikit-learn==1.4.2 joblib
+        run: pip install boto3 "sagemaker<3" scikit-learn==1.4.2 joblib
 
       - name: Executar Deploy no SageMaker
         env:
