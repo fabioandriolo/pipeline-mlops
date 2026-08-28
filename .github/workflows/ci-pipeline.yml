@@ -1,0 +1,32 @@
+name: CI MLOps - Random Forest
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  test_and_validate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v4
+
+      - name: Configurar Python 3.12
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.12'
+
+      - name: Instalar dependências
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Linting (Verificar sintaxe)
+        run: |
+          flake8 src/ tests/ --count --select=E9,F63,F7,F82 --show-source --statistics
+
+      - name: Rodar Testes de Sanidade (Pytest)
+        run: |
+          pytest tests/
