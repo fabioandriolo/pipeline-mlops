@@ -1,3 +1,5 @@
+%pip install scikit-learn==1.4.2
+
 import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestRegressor
