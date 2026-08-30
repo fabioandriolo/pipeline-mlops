@@ -7,6 +7,36 @@ from sklearn.metrics import mean_absolute_error
 import joblib
 import os
 
+import os
+
+# Pega o caminho de onde este notebook está rodando (dentro do repositório)
+caminho_base = os.getcwd()
+
+# Define o conteúdo corrigido do inference.py
+conteudo_correto = """import joblib
+import os
+
+def model_fn(model_dir):
+    return joblib.load(os.path.join(model_dir, 'modelo_frete.joblib'))
+"""
+
+# Tenta encontrar a pasta 'code' e sobrescrever o arquivo
+caminho_inference = os.path.join(caminho_base, "code", "inference.py")
+
+# Se a pasta code não estiver na mesma pasta do notebook, ajusta o caminho para a raiz do repo
+if not os.path.exists(os.path.join(caminho_base, "code")):
+    caminho_inference = os.path.join(caminho_base, "..", "code", "inference.py")
+
+try:
+    with open(caminho_inference, "w") as f:
+        f.write(conteudo_correto)
+    print(f"Sucesso! O arquivo foi corrigido em: {caminho_inference}")
+    print("Agora é só abrir a aba do Git (dê um Refresh se precisar) e fazer o Commit & Push!")
+except Exception as e:
+    print(f"Erro ao salvar: {e}")
+
+
+
 def treinar_modelo_frete(tabela_itens):
     print("1. Carregando os dados via Spark...")
     df = spark.table(tabela_itens).toPandas()  # noqa: F821
