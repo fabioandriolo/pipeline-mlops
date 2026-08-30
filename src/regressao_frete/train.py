@@ -7,7 +7,7 @@ import os
 
 def treinar_modelo_frete(tabela_itens):
     print("1. Carregando os dados via Spark...")
-    df = spark.table(tabela_itens).toPandas()
+    df = spark.table(tabela_itens).toPandas()  # noqa: F821
     df.columns = df.columns.str.strip().str.lower()
     
     print(f"-> Total de registros originais no banco: {len(df)}")
